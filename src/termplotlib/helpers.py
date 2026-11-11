@@ -32,9 +32,14 @@ def is_unicode_standard_output():
 
 
 def get_gnuplot_version():
-    out = subprocess.check_output(["gnuplot", "--version"]).decode()
-    m = re.match("gnuplot (\\d).(\\d) patchlevel (\\d)\n", out)
-    if m is None:
-        raise RuntimeError("Couldn't get gnuplot version")
+    try:
+        out = subprocess.check_output(["gnuplot", "--version"]).decode()
+    except (FileNotFoundError, subprocess.SubprocessError):
+        return (0, 0, 0)
 
-    return int(m.group(1)), int(m.group(2)), int(m.group(3))
+    m = re.search(r"gnuplot\s+(\d+)\.(\d+)(?:\s+patchlevel\s+(\d+))?", out)
+    if m is None:
+        raise RuntimeError(f"Couldn't get gnuplot version from: {out.strip()!r}")
+
+    patch = int(m.group(3)) if m.group(3) else 0
+    return int(m.group(1)), int(m.group(2)), patch

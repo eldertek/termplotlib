@@ -1,8 +1,10 @@
+import pytest
 import numpy as np
 
 import termplotlib as tpl
 
 
+@pytest.mark.skipif(tpl.get_gnuplot_version() == (0, 0, 0), reason="gnuplot not installed")
 def test_scatter():
     rng = np.random.default_rng(0)
     x = np.arange(0.0, 50.0, 2.0)

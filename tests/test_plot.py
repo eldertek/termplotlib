@@ -4,6 +4,7 @@ import pytest
 import termplotlib as tpl
 
 
+@pytest.mark.skipif(tpl.get_gnuplot_version() == (0, 0, 0), reason="gnuplot not installed")
 def test_plot():
     x = np.linspace(0, 2 * np.pi, 10)
     y = np.sin(x)
@@ -29,6 +30,7 @@ def test_plot():
     assert string == ref
 
 
+@pytest.mark.skipif(tpl.get_gnuplot_version() == (0, 0, 0), reason="gnuplot not installed")
 def test_nolabel():
     x = np.linspace(0, 2 * np.pi, 10)
     y = np.sin(x)
